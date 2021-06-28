@@ -2,6 +2,8 @@
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SimpleJsonTest
 {
@@ -27,6 +29,8 @@ namespace SimpleJsonTest
             {
                 Console.WriteLine($"Found {item["text"]}");
             }
+
+            Console.WriteLine($"{ClockService.GetTime()}");
         }
 
         static byte[] LoadResource(string filename)

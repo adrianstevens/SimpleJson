@@ -13,8 +13,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Properties\" />
+    <None Remove="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 </Project>
