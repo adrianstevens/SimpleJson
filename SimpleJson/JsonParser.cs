@@ -200,7 +200,7 @@ internal class JsonParser
         EatWhitespace(json, ref index);
 
         // "
-        char c;
+        char c = json[index++];
         bool complete = false;
         while (!complete)
         {
