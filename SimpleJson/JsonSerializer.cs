@@ -1,8 +1,8 @@
 ﻿// Source code is modified from Mike Jones's JSON Serialization and Deserialization library (https://www.ghielectronics.com/community/codeshare/entry/357)
 
 using System;
-using System.Reflection;
 using System.Collections;
+using System.Reflection;
 using System.Text;
 
 namespace SimpleJsonSerializer
@@ -10,7 +10,7 @@ namespace SimpleJsonSerializer
     /// <summary>
     /// JSON.NetMF - JSON Serialization and Deserialization library for .NET Micro Framework
     /// </summary>
-    public class JsonSerializer
+    public partial class JsonSerializer
     {
         public JsonSerializer(DateTimeFormat dateTimeFormat = DateTimeFormat.Default)
         {
