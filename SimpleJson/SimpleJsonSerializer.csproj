@@ -1,33 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <RootNamespace>SimpleJson</RootNamespace>
     <AssemblyName>SimpleJson</AssemblyName>
     <TargetFrameworks>netstandard2.0;net4.7.2</TargetFrameworks>
-    <PackOnBuild>true</PackOnBuild>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>SimpleJsonSerializer</PackageId>
     <PackageVersion>0.0.3</PackageVersion>
     <Authors>Adrian Stevens</Authors>
     <Owners>Adrian Stevens</Owners>
 	<LangVersion>10.0</LangVersion>
     <PackageProjectUrl>https://github.com/adrianstevens/SimpleJson</PackageProjectUrl>
+	<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Summary>Json serializer/deserializer</Summary>
     <Title>SimpleJsonSerializer</Title>
-    <Description>Simple Json serializer 
+	<PackageTags>Simple,Json,Serialize,Deserialize,Meadow,Meadow.Foundation,.NET</PackageTags>
+	<Description>Simple Json Serializer 
 
 Source code is modified from Mike Jones's JSON Serialization and Deserialization library previously available here:(https://www.ghielectronics.com/community/codeshare/entry/357)
 
 Package is published to support Wilderness Labs .NET IoT platform Meadow but should work with any modern .NET target.
     </Description>
-    <PackageTags>Simple,Json,Serialize,Deserialize,Meadow,Meadow.Foundation,.NET</PackageTags>
+    
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
 </Project>
