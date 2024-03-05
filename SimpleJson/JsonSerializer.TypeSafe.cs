@@ -93,6 +93,10 @@ public partial class JsonSerializer
             {
                 switch (true)
                 {
+                    case bool _ when prop.PropertyType.IsEnum:
+                        var enumValue = Enum.Parse(prop.PropertyType, values[v].ToString());
+                        prop.SetValue(instance, enumValue);
+                        break;
                     case bool _ when prop.PropertyType == typeof(ulong):
                         prop.SetValue(instance, Convert.ToUInt64(values[v]));
                         break;
