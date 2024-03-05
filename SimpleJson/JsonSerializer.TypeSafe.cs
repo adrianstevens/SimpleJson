@@ -22,17 +22,26 @@ namespace SimpleJsonSerializer
             return result;
         }
 
-        private static void DeserializeArray(ArrayList array, Type type, ref object[] instance)
+        private static void DeserializeArray(ArrayList array, Type type, ref Array instance)
         {
-            throw new NotSupportedException();
-            /*
             var index = 0;
 
-            foreach (object item in array)
+            foreach (Hashtable item in array)
             {
-                Deserialize(item, type, ref instance[index++]);
+                if (type == typeof(string))
+                {
+                    var e = item.GetEnumerator();
+                    e.MoveNext();
+                    instance.SetValue(((DictionaryEntry)e.Current).Value, index);
+                    index++;
+                }
+                else
+                {
+                    var arrayItem = Activator.CreateInstance(type);
+                    Deserialize(item, type, ref arrayItem);
+                    instance.SetValue(arrayItem, index++);
+                }
             }
-            */
         }
 
         public static T Deserialize<T>(string json)
@@ -123,8 +132,10 @@ namespace SimpleJsonSerializer
                             if (prop.PropertyType.IsArray)
                             {
                                 var al = values[v] as ArrayList;
-                                object[] targetArray = new object[al.Count];
-                                DeserializeArray(al, type, ref targetArray);
+                                var elementType = prop.PropertyType.GetElementType();
+                                var targetArray = Array.CreateInstance(elementType, al.Count);
+                                DeserializeArray(al, elementType, ref targetArray);
+                                prop.SetValue(instance, targetArray);
                             }
                             else
                             {

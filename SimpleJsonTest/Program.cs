@@ -55,7 +55,9 @@ namespace SimpleJsonTest
     {
         public string Text { get; set; }
         public string Id { get; set; }
+        public string Type { get; set; }
         public int Value { get; set; }
+        public MenuItem[] Sub { get; set; }
     }
 
     internal class Program
@@ -79,7 +81,7 @@ namespace SimpleJsonTest
 
             var points = SimpleJsonSerializer.JsonSerializer.Deserialize<CalibrationPoint[]>(testJsonArray);
 
-            SimpleJsonSerializer.JsonSerializer.Deserialize<MenuContainer>(menuJson);
+            var menu = SimpleJsonSerializer.JsonSerializer.Deserialize<MenuContainer>(menuJson);
         }
 
         private static void DeserializeAsHashtable(string menuJson)
