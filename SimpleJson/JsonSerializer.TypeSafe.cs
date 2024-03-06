@@ -136,41 +136,38 @@ public partial class JsonSerializer
     {
         var type = typeof(T);
 
-        if (type.IsArray || type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+        if (type.IsArray)
         {
-            var elementType = type.IsArray ? type.GetElementType() : type.GetGenericArguments()[0];
-
+            var elementType = type.GetElementType();
             var rootArray = DeserializeString(json) as ArrayList;
+            var targetArray = Array.CreateInstance(elementType, rootArray.Count);
 
-            if (type.IsArray)
+            var index = 0;
+            foreach (Hashtable item in rootArray)
             {
-                var targetArray = Array.CreateInstance(elementType, rootArray.Count);
-
-                var index = 0;
-                foreach (Hashtable item in rootArray)
-                {
-                    object instance = Activator.CreateInstance(elementType);
-                    Deserialize(item, elementType, ref instance);
-                    targetArray.SetValue(instance, index++);
-                }
-
-                return (T)(object)targetArray;
+                object instance = Activator.CreateInstance(elementType);
+                Deserialize(item, elementType, ref instance);
+                targetArray.SetValue(instance, index++);
             }
-            else
+
+            return (T)(object)targetArray;
+        }
+        else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+        {
+            var elementType = type.GetGenericArguments()[0];
+            var rootArray = DeserializeString(json) as ArrayList;
+            var targetList = Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+
+            var addMethod = targetList.GetType().GetMethod("Add");
+
+            foreach (Hashtable item in rootArray)
             {
-                var targetList = Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
-
-                var addMethod = targetList.GetType().GetMethod("Add");
-
-                foreach (Hashtable item in rootArray)
-                {
-                    object instance = Activator.CreateInstance(elementType);
-                    Deserialize(item, elementType, ref instance);
-                    addMethod.Invoke(targetList, new[] { instance });
-                }
-
-                return (T)targetList;
+                object instance = Activator.CreateInstance(elementType);
+                Deserialize(item, elementType, ref instance);
+                addMethod.Invoke(targetList, new[] { instance });
             }
+
+            return (T)targetList;
         }
         else
         {
