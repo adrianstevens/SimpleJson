@@ -20,26 +20,7 @@ public partial class JsonSerializer
             where T : new()
     {
         var result = new List<T>(array.Count);
-
-        foreach (var item in array)
-        {
-            if (item is string jsonString)
-            {
-                var deserializedItem = Deserialize<T>(jsonString);
-                result.Add(deserializedItem);
-            }
-            else if (item is Hashtable hashtable)
-            {
-                object listItem = Activator.CreateInstance<T>();
-                Deserialize(hashtable, typeof(T), ref listItem);
-                result.Add((T)listItem);
-            }
-            else
-            {
-                throw new ArgumentException("Unsupported type in ArrayList for deserialization.");
-            }
-        }
-
+        DeserializeList(array, typeof(T), ref result);
         return result;
     }
 
@@ -50,30 +31,27 @@ public partial class JsonSerializer
     /// <param name="array">The JSON array to deserialize.</param>
     /// <param name="type">The type of objects in the list as a <see cref="System.Type"/>.</param>
     /// <returns>A list of objects of type T.</returns>
-    private static List<T> DeserializeList<T>(ArrayList array, Type type) where T : new()
+    private static void DeserializeList<T>(ArrayList array, Type type, ref List<T> instance)
+    where T : new()
     {
-        var result = new List<T>(array.Count);
-
         foreach (var item in array)
         {
             if (item is string jsonString)
             {
                 var deserializedItem = Deserialize<T>(jsonString);
-                result.Add(deserializedItem);
+                instance.Add(deserializedItem);
             }
             else if (item is Hashtable hashtable)
             {
                 object listItem = Activator.CreateInstance<T>();
                 Deserialize(hashtable, typeof(T), ref listItem);
-                result.Add((T)listItem);
+                instance.Add((T)listItem);
             }
             else
             {
                 throw new ArgumentException("Unsupported type in ArrayList for deserialization.");
             }
         }
-
-        return result;
     }
 
     /// <summary>
