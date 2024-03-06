@@ -1,9 +1,14 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleJsonTest", "SimpleJsonTest\SimpleJsonTest.csproj", "{CD06CE97-DDA2-484D-9B65-D47E09093582}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleJsonSerializer", "SimpleJson\SimpleJsonSerializer.csproj", "{71660B0C-D848-4852-9354-BF660D85FD23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleJsonSerializer", "SimpleJson\SimpleJsonSerializer.csproj", "{71660B0C-D848-4852-9354-BF660D85FD23}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CDBBA4EF-BDD5-4B21-94C9-F534F8BF7AED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicTest", "Tests\BasicTest\BasicTest.csproj", "{F37E7EC4-1E39-4DF9-9CBC-580736940FB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArrayAndListTest", "ArrayAndListTest\ArrayAndListTest.csproj", "{40760ADC-4B67-4636-8EEA-706A447A96B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +16,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CD06CE97-DDA2-484D-9B65-D47E09093582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD06CE97-DDA2-484D-9B65-D47E09093582}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD06CE97-DDA2-484D-9B65-D47E09093582}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD06CE97-DDA2-484D-9B65-D47E09093582}.Release|Any CPU.Build.0 = Release|Any CPU
 		{71660B0C-D848-4852-9354-BF660D85FD23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{71660B0C-D848-4852-9354-BF660D85FD23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71660B0C-D848-4852-9354-BF660D85FD23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71660B0C-D848-4852-9354-BF660D85FD23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F37E7EC4-1E39-4DF9-9CBC-580736940FB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F37E7EC4-1E39-4DF9-9CBC-580736940FB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F37E7EC4-1E39-4DF9-9CBC-580736940FB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F37E7EC4-1E39-4DF9-9CBC-580736940FB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40760ADC-4B67-4636-8EEA-706A447A96B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40760ADC-4B67-4636-8EEA-706A447A96B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40760ADC-4B67-4636-8EEA-706A447A96B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40760ADC-4B67-4636-8EEA-706A447A96B2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F37E7EC4-1E39-4DF9-9CBC-580736940FB5} = {CDBBA4EF-BDD5-4B21-94C9-F534F8BF7AED}
+		{40760ADC-4B67-4636-8EEA-706A447A96B2} = {CDBBA4EF-BDD5-4B21-94C9-F534F8BF7AED}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {144610D9-B9E0-4776-97F4-1C156CD4F776}
 	EndGlobalSection
 EndGlobal
