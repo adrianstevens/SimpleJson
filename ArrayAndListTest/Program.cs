@@ -9,7 +9,37 @@ namespace ArrayAndListTest
         {
             Console.WriteLine("Hello, SimpleJson! Arrays and Lists");
 
+            SerializeEnum();
+
+            SerializePuzzle();
+
             LoadPuzzles();
+        }
+
+        static void SerializeEnum()
+        {
+            var serializer = new SimpleJsonSerializer.JsonSerializer();
+
+            var value = PieceType.Horizontal2;
+
+            var enumJson = serializer.Serialize(value);
+            Console.WriteLine(enumJson);
+        }
+
+        static void SerializePuzzle()
+        {
+            var serializer = new SimpleJsonSerializer.JsonSerializer();
+
+            var puzzle = new Puzzle();
+            puzzle.AddPiece(0, 0, PieceType.Horizontal2);
+            puzzle.AddPiece(0, 2, PieceType.Vertical2);
+            puzzle.AddPiece(2, 0, PieceType.Horizontal3);
+            puzzle.AddPiece(2, 3, PieceType.Vertical3);
+            puzzle.AddPiece(4, 0, PieceType.Solve);
+
+            var puzzleJson = serializer.Serialize(puzzle);
+
+            Console.WriteLine(puzzleJson);
         }
 
         static IEnumerable<Puzzle> LoadPuzzles()

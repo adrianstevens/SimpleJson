@@ -61,22 +61,25 @@ public partial class JsonSerializer
     public static string SerializeObject(object o, DateTimeFormat dateTimeFormat = DateTimeFormat.Default)
     {
         if (o == null)
+        {
             return "null";
+        }
 
         Type type = o.GetType();
+
+        if (type.IsEnum)
+        {   // Serialize enum values by converting them integers
+            return $"{(int)o}";
+        }
 
         switch (type.Name)
         {
             case "Boolean":
-                {
-                    return (bool)o ? "true" : "false";
-                }
+                return (bool)o ? "true" : "false";
             case "String":
             case "Char":
             case "Guid":
-                {
-                    return "\"" + o.ToString() + "\"";
-                }
+                return "\"" + o.ToString() + "\"";
             case "Single":
             case "Double":
             case "Decimal":
@@ -89,17 +92,13 @@ public partial class JsonSerializer
             case "UInt32":
             case "Int64":
             case "UInt64":
-                {
-                    return o.ToString();
-                }
+                return o.ToString();
             case "DateTime":
-                {
-                    return dateTimeFormat switch
-                    {   // This MSDN page describes the problem with JSON dates: http://msdn.microsoft.com/en-us/library/bb299886.aspx
-                        DateTimeFormat.Ajax => "\"" + DateTimeExtensions.ToASPNetAjax((DateTime)o) + "\"",
-                        _ => "\"" + DateTimeExtensions.ToIso8601((DateTime)o) + "\"",
-                    };
-                }
+                return dateTimeFormat switch
+                {   // This MSDN page describes the problem with JSON dates: http://msdn.microsoft.com/en-us/library/bb299886.aspx
+                    DateTimeFormat.Ajax => "\"" + DateTimeExtensions.ToASPNetAjax((DateTime)o) + "\"",
+                    _ => "\"" + DateTimeExtensions.ToIso8601((DateTime)o) + "\"",
+                };
         }
 
         if (o is IDictionary && !type.IsArray)
