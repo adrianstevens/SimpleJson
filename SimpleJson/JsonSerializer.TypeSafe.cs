@@ -1,11 +1,65 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SimpleJsonSerializer;
 
+/// <summary>
+/// Provides typesafe methods for JSON serialization and deserialization.
+/// </summary>
 public partial class JsonSerializer
 {
+    /// <summary>
+    /// Deserializes a JSON array into a list of objects of type T.
+    /// </summary>
+    /// <typeparam name="T">The type of objects in the list.</typeparam>
+    /// <param name="array">The JSON array to deserialize.</param>
+    /// <returns>A list of objects of type T.</returns>
+    public static List<T> DeserializeList<T>(ArrayList array)
+            where T : new()
+    {
+        var result = new List<T>(array.Count);
+        DeserializeList(array, typeof(T), ref result);
+        return result;
+    }
+
+    /// <summary>
+    /// Deserializes a JSON array into a list of objects of type T.
+    /// </summary>
+    /// <typeparam name="T">The type of objects in the list.</typeparam>
+    /// <param name="array">The JSON array to deserialize.</param>
+    /// <param name="type">The type of objects in the list as a <see cref="System.Type"/>.</param>
+    /// <returns>A list of objects of type T.</returns>
+    private static void DeserializeList<T>(ArrayList array, Type type, ref List<T> instance)
+    where T : new()
+    {
+        foreach (var item in array)
+        {
+            if (item is string jsonString)
+            {
+                var deserializedItem = Deserialize<T>(jsonString);
+                instance.Add(deserializedItem);
+            }
+            else if (item is Hashtable hashtable)
+            {
+                object listItem = Activator.CreateInstance<T>();
+                Deserialize(hashtable, typeof(T), ref listItem);
+                instance.Add((T)listItem);
+            }
+            else
+            {
+                throw new ArgumentException("Unsupported type in ArrayList for deserialization.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Deserializes a JSON array into an array of objects of type T.
+    /// </summary>
+    /// <typeparam name="T">The type of objects in the array.</typeparam>
+    /// <param name="array">The JSON array to deserialize.</param>
+    /// <returns>An array of objects of type T.</returns>
     public static T[] DeserializeArray<T>(ArrayList array)
         where T : new()
     {
@@ -20,6 +74,12 @@ public partial class JsonSerializer
         return result;
     }
 
+    /// <summary>
+    /// Deserializes a JSON array into an array of objects of the specified type.
+    /// </summary>
+    /// <param name="array">The JSON array to deserialize.</param>
+    /// <param name="type">The type of objects in the array as a <see cref="System.Type"/>.</param>
+    /// <param name="instance">The array instance to populate.</param>
     private static void DeserializeArray(ArrayList array, Type type, ref Array instance)
     {
         var index = 0;
@@ -42,24 +102,72 @@ public partial class JsonSerializer
         }
     }
 
+    /// <summary>
+    /// Deserializes an object of type T from a JSON string or Hashtable.
+    /// </summary>
+    /// <typeparam name="T">The type of object to deserialize.</typeparam>
+    /// <param name="data">The JSON string or Hashtable to deserialize.</param>
+    /// <returns>An object of type T.</returns>
+    public static T Deserialize<T>(object data)
+    {
+        if (data is string json)
+        {
+            return Deserialize<T>(json);
+        }
+        else if (data is Hashtable hashtable)
+        {
+            object instance = Activator.CreateInstance<T>();
+            Deserialize(hashtable, typeof(T), ref instance);
+            return (T)instance;
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported data type for deserialization.");
+        }
+    }
+
+    /// <summary>
+    /// Deserializes an object of type T from a JSON string.
+    /// </summary>
+    /// <typeparam name="T">The type of object to deserialize.</typeparam>
+    /// <param name="json">The JSON string to deserialize.</param>
+    /// <returns>An object of type T.</returns>
     public static T Deserialize<T>(string json)
     {
         var type = typeof(T);
+
         if (type.IsArray)
         {
-            var etype = type.GetElementType();
-
+            var elementType = type.GetElementType();
             var rootArray = DeserializeString(json) as ArrayList;
-            var targetArray = Array.CreateInstance(etype, rootArray.Count);
+            var targetArray = Array.CreateInstance(elementType, rootArray.Count);
 
             var index = 0;
             foreach (Hashtable item in rootArray)
             {
-                object einstance = Activator.CreateInstance(etype);
-                Deserialize(item, etype, ref einstance);
-                targetArray.SetValue(einstance, index++);
+                object instance = Activator.CreateInstance(elementType);
+                Deserialize(item, elementType, ref instance);
+                targetArray.SetValue(instance, index++);
             }
-            return (T)targetArray.Clone();
+
+            return (T)(object)targetArray;
+        }
+        else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+        {
+            var elementType = type.GetGenericArguments()[0];
+            var rootArray = DeserializeString(json) as ArrayList;
+            var targetList = Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+
+            var addMethod = targetList.GetType().GetMethod("Add");
+
+            foreach (Hashtable item in rootArray)
+            {
+                object instance = Activator.CreateInstance(elementType);
+                Deserialize(item, elementType, ref instance);
+                addMethod.Invoke(targetList, new[] { instance });
+            }
+
+            return (T)targetList;
         }
         else
         {
@@ -69,9 +177,14 @@ public partial class JsonSerializer
             return (T)instance;
         }
         //            object instance = new T(); // <-- MUST be declared as object to box potential structs
-
     }
 
+    /// <summary>
+    /// Deserializes an object of the specified type from a JSON string.
+    /// </summary>
+    /// <param name="json">The JSON string to deserialize.</param>
+    /// <param name="type">The type of object to deserialize as a <see cref="System.Type"/>.</param>
+    /// <param name="instance">The object instance to populate.</param>
     private static void Deserialize(string json, Type type, ref object instance)
     {
         var root = DeserializeString(json) as Hashtable;
@@ -79,6 +192,12 @@ public partial class JsonSerializer
         Deserialize(root, type, ref instance);
     }
 
+    /// <summary>
+    /// Deserializes an object of the specified type from a Hashtable.
+    /// </summary>
+    /// <param name="root">The Hashtable representing the JSON data.</param>
+    /// <param name="type">The type of object to deserialize as a <see cref="System.Type"/>.</param>
+    /// <param name="instance">The object instance to populate.</param>
     private static void Deserialize(Hashtable root, Type type, ref object instance)
     {
         var values = root ?? throw new ArgumentException();
@@ -141,6 +260,21 @@ public partial class JsonSerializer
                             var targetArray = Array.CreateInstance(elementType, al.Count);
                             DeserializeArray(al, elementType, ref targetArray);
                             prop.SetValue(instance, targetArray);
+                        }
+                        else if (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+                        {
+                            var listType = prop.PropertyType.GetGenericArguments()[0];
+                            var list = Activator.CreateInstance(prop.PropertyType);
+                            var addMethod = prop.PropertyType.GetMethod("Add");
+
+                            foreach (var item in (ArrayList)values[v])
+                            {
+                                var listItem = Activator.CreateInstance(listType);
+                                Deserialize(item as Hashtable, listType, ref listItem);
+                                addMethod.Invoke(list, new[] { listItem });
+                            }
+
+                            prop.SetValue(instance, list);
                         }
                         else
                         {

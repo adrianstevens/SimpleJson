@@ -5,14 +5,14 @@ using System.Text;
 namespace SimpleJsonSerializer;
 
 /// <summary>
-/// Parses JSON strings into a Hashtable.  The Hashtable contains one or more key/value pairs
-/// (DictionaryEntry objects).  Each key is the name of a property that (hopefully) exists
-/// in the class object that it represents.  Each value is one of the following:
-///   Hastable - Another list of one or more DictionaryEntry objects, essentially representing
+/// Parses JSON strings into a Hashtable. The Hashtable contains one or more key/value pairs
+/// (DictionaryEntry objects). Each key is the name of a property that (hopefully) exists
+/// in the class object that it represents. Each value is one of the following:
+/// Hastable - Another list of one or more DictionaryEntry objects, essentially representing
 ///              a property that is another class.
-///   ArrayList - An array of one or more objects, which themselves can be one of the items
-///               enumerated in this list.
-///   Value Type - an actual value, such as a string, int, bool, Guid, DateTime, etc
+/// ArrayList - An array of one or more objects, which themselves can be one of the items
+///              enumerated in this list.
+/// Value Type - an actual value, such as a string, int, bool, Guid, DateTime, etc.
 /// </summary>
 internal class JsonParser
 {
@@ -200,8 +200,10 @@ internal class JsonParser
         EatWhitespace(json, ref index);
 
         // "
-        char c = json[index++];
+        char c;
         bool complete = false;
+
+        index++;
         while (!complete)
         {
             if (index == json.Length)

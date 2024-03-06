@@ -7,9 +7,9 @@ internal static class Helper
 {
     public const int MaxDoubleDigits = 16;
 
-    public static bool IsWhiteSpace(char ch)
+    public static bool IsWhiteSpace(char character)
     {
-        return ch == ' ';
+        return char.IsWhiteSpace(character);
     }
 
     // Parse integer values using localized number format information.
@@ -58,10 +58,6 @@ internal static class Helper
                 sign = false;
                 ++posn;
             }
-            /*      else if (ch == thousandsSep[0])
-                    {
-                        ++posn;
-                    }*/
             else if ((parseHex && ((ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f'))) ||
                      (ch >= '0' && ch <= '9'))
             {
@@ -150,12 +146,6 @@ internal static class Helper
                 {
                     digit = (uint)(ch - '0');
                 }
-                /*       else if (ch == thousandsSep[0])
-                       {
-                           // Ignore thousands separators in the string.
-                           ++posn;
-                           continue;
-                       }*/
                 else
                 {
                     break;

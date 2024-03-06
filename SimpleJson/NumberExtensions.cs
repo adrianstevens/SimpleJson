@@ -12,7 +12,7 @@ internal static class UInt32Extensions
 {
     public static bool TryParse(string str, NumberStyle style, out UInt32 result)
     {
-        bool bresult = Helper.TryParseUInt64Core(str, style == NumberStyle.Hexadecimal ? true : false, out ulong tmp, out bool sign);
+        bool bresult = Helper.TryParseUInt64Core(str, style == NumberStyle.Hexadecimal, out ulong tmp, out bool sign);
         result = (UInt32)tmp;
 
         return bresult && !sign;
@@ -77,7 +77,7 @@ internal static class Int64Extensions
 
     private static bool TryParseHex(string str, out ulong result)
     {
-        return Helper.TryParseUInt64Core(str, true, out result, out bool sign);
+        return Helper.TryParseUInt64Core(str, true, out result, out _);
     }
 }
 
