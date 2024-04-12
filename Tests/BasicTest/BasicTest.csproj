@@ -6,14 +6,16 @@
     <TargetFramework>net4.7.2</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Properties\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <None Remove="Properties\**" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="menu.json" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Properties\" />
     <None Remove="System.Net.Http" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SimpleJson\SimpleJsonSerializer.csproj" />
